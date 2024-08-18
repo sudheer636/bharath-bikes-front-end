@@ -1,0 +1,54 @@
+.home-page {
+  width: 100%;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.start-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin: 20px 0;
+}
+
+.start-button:hover {
+  background-color: #0056b3;
+}
+
+.selected-bike {
+  font-size: 18px;
+  font-weight: bold;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse; 
+  margin-top: 20px;
+}
+
+.dataTable th, .dataTable td {
+  padding: 10px; 
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+.dataTable th {
+  background-color: #f4f4f4; 
+  font-weight: bold;
+}
+
+.dashboardHeader {
+  font-size: 24px;
+  margin-bottom: 20px; 
+}

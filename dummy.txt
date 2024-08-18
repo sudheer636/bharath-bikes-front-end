@@ -1,0 +1,148 @@
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { parseISO, isWithinInterval } from 'date-fns';
+import { Pie } from 'react-chartjs-2';
+import 'chart.js/auto';
+
+// Utility Function to Filter Data
+const filterData = (data, userId, bikeName, startDate, endDate) => {
+  return data.filter(item => {
+    const startTime = parseISO(item.StartTime);
+    return (
+      (!userId || item.UserId === userId) &&
+      (!bikeName || item.Bikename === bikeName) &&
+      (!startDate || !endDate || isWithinInterval(startTime, { start: startDate, end: endDate }))
+    );
+  });
+};
+
+// Function to Generate Chart Data
+const generateChartData = (filteredData) => {
+  const statusCounts = filteredData.reduce((acc, item) => {
+    acc[item.Status] = (acc[item.Status] || 0) + 1;
+    return acc;
+  }, {});
+
+  return {
+    labels: Object.keys(statusCounts),
+    datasets: [{
+      data: Object.values(statusCounts),
+      backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'], // Customize colors as needed
+    }]
+  };
+};
+
+// Dashboard Component
+const Dashboard = ({ filteredData }) => {
+  const chartData = generateChartData(filteredData);
+
+  const options = {
+    maintainAspectRatio: true, // Ensures the chart resizes based on container size
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            const label = context.label || '';
+            const value = context.raw || '';
+            return `${label}: ${value}`;
+          }
+        }
+      }
+    }
+  };
+
+  return (
+    <div style={{ width: '300px', height: '300px' }}> {/* Adjust size as needed */}
+      <h2>Status Distribution</h2>
+      <Pie data={chartData} options={options} />
+    </div>
+  );
+};
+
+// AdminHomePage Component
+const AdminHomePage = () => {
+  const [userId, setUserId] = useState('');
+  const [bikeName, setBikeName] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+  const [filteredData, setFilteredData] = useState([]);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch Jobs Data
+  const fetchJobs = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/user/my-jobs', {
+        withCredentials: true,
+      });
+      setData(response.data || []);
+      setLoading(false);
+    } catch (error) {
+      console.log('Error fetching jobs:', error);
+      setError(error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchJobs();
+  }, []);
+
+  useEffect(() => {
+    if (data.length > 0) {
+      const filtered = filterData(
+        data,
+        userId,
+        bikeName,
+        startDate ? parseISO(startDate) : null,
+        endDate ? parseISO(endDate) : null
+      );
+      setFilteredData(filtered);
+    }
+  }, [data, userId, bikeName, startDate, endDate]);
+
+  const handleFilterChange = () => {
+    const filtered = filterData(
+      data,
+      userId,
+      bikeName,
+      startDate ? parseISO(startDate) : null,
+      endDate ? parseISO(endDate) : null
+    );
+    setFilteredData(filtered);
+  };
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error loading data: {error.message}</p>;
+
+  return (
+    <div>
+      <h1>Admin Dashboard</h1>
+      <div>
+        <label>UserId:</label>
+        <input type="text" value={userId} onChange={e => setUserId(e.target.value)} />
+      </div>
+      <div>
+        <label>Bike Name:</label>
+        <input type="text" value={bikeName} onChange={e => setBikeName(e.target.value)} />
+      </div>
+      <div>
+        <label>Start Date:</label>
+        <input type="date" value={startDate} onChange={e => setStartDate(e.target.value)} />
+      </div>
+      <div>
+        <label>End Date:</label>
+        <input type="date" value={endDate} onChange={e => setEndDate(e.target.value)} />
+      </div>
+      <button onClick={handleFilterChange}>Apply Filters</button>
+      <Dashboard filteredData={filteredData} />
+    </div>
+  );
+};
+
+export default AdminHomePage;
