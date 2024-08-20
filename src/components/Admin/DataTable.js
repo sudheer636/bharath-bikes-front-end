@@ -8,7 +8,7 @@ const DataTable = ({ filteredData }) => {
         <thead>
           <tr>
             <th>JobId</th>
-            <th>UserId</th>
+            <th>User Name</th>
             <th>BikeName</th>
             <th>Status</th>
             <th>StartTime</th>
@@ -18,7 +18,7 @@ const DataTable = ({ filteredData }) => {
           {filteredData.map((item) => (
             <tr key={item._id}>
               <td>{item.JobId}</td>
-              <td>{item.UserId}</td>
+              <td>{item.username}</td>
               <td>{item.Bikename}</td>
               <td>{item.Status}</td>
               <td>

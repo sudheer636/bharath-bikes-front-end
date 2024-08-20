@@ -1,8 +1,8 @@
 import React from 'react';
 
 const FilterSection = ({
-  userId,
-  setUserId,
+  username,
+  setUsername,
   bikeName,
   setBikeName,
   startDate,
@@ -16,12 +16,12 @@ const FilterSection = ({
 }) => {
   return (
     <div className="filterSection">
-      <label className="filterLabel">UserId:</label>
+      <label className="filterLabel">User Name:</label>
       <input
         className="filterInput"
         type="text"
-        value={userId}
-        onChange={(e) => setUserId(e.target.value)}
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
       />
       <label className="filterLabel">Bike Name:</label>
       <select

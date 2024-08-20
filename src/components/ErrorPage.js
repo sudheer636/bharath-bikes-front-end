@@ -4,7 +4,7 @@ import './ErrorPage.css';
 
 function ErrorPage() {
   const redirectToLoginPage = () => {
-    history.push("/auth/login");
+    history.push("/api/auth/login");
   };
 
   return (

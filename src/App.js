@@ -12,6 +12,7 @@ import UserHomePage from "./components/User/UserHomePage";
 import AdminHomePage from "./components/Admin/AdminHomePage";
 import { createBrowserHistory } from "history";
 export const history = createBrowserHistory();
+export const baseUrl = "http://localhost:3001";
 
 function App() {
   return (
@@ -20,9 +21,9 @@ function App() {
             <Routes>
               <Route path="/" element={<Navigate replace to="/api/auth/login" />} />
               <Route path="/api/auth/login" element={<LoginPage />} />
-              <Route path="/user/home" element={<UserHomePage />} />
-              <Route path="/admin/home" element={<AdminHomePage />} />
-              <Route path="/timeout" element={<ErrorPage />} />
+              <Route path="/api/user/home" element={<UserHomePage />} />
+              <Route path="/api/admin/home" element={<AdminHomePage />} />
+              <Route path="/api/timeout" element={<ErrorPage />} />
             </Routes>
         </div>
       </HistoryRouter>

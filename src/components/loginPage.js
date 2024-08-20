@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { history } from "../App";
-import "./ErrorPage.css";
+import "./loginPage.css";
+import { baseUrl } from "../App";
 
 const LoginPage = () => {
   const [currentPage, setCurrentPage] = useState("login");
@@ -43,7 +44,7 @@ const LoginPage = () => {
         currentPage,
       };
       const response = await axios.post(
-        "http://localhost:3001/api/auth/login",
+        `${baseUrl}/api/auth/login`,
         data
       );
       if (response.status === 200) {
@@ -53,9 +54,9 @@ const LoginPage = () => {
         localStorage.setItem("selectedBike", selectedBike);
         localStorage.setItem("username", username);
         if (currentPage === "admin") {
-          history.push("/admin/home");
+          history.push("/api/admin/home");
         } else {
-          history.push("/user/home");
+          history.push("/api/user/home");
         }
       } else {
         alert("Invalid credentials");
@@ -79,7 +80,7 @@ const LoginPage = () => {
         Email: emailId,
       };
       const response = await axios.post(
-        "http://localhost:3001/api/auth/register",
+        `${baseUrl}/api/auth/register`,
         data
       );
       if (response.status === 201) {
